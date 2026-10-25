@@ -1,0 +1,20 @@
+[
+  {
+    "title": "Source reviews still owed",
+    "ask": "Which companies still owe their source review?",
+    "command": "npm run group -- attention --period=2026-09",
+    "output": "  period   entity  owner  due_on      actual_rows  incomplete_rows  review             \n  -------  ------  -----  ----------  -----------  ---------------  -------------------\n  2026-09  AU      Tui    2026-10-22  6            0                Needs source review\n  2026-09  NZ      Aroha  2026-10-22  6            0                Reconciled         "
+  },
+  {
+    "title": "Internal balances to reconcile",
+    "ask": "Which internal sales and purchases need to be matched?",
+    "command": "npm run group -- intercompany --period=2026-09",
+    "output": "  period   entity  group_code  group_name              base_amount\n  -------  ------  ----------  ----------------------  -----------\n  2026-09  AU      IC-COST     Intercompany purchases  11000.00   \n  2026-09  AU      IC-SALES    Intercompany sales      0.00       \n  2026-09  NZ      IC-COST     Intercompany purchases  0.00       \n  2026-09  NZ      IC-SALES    Intercompany sales      -11000.00  "
+  },
+  {
+    "title": "Group profit review",
+    "ask": "What is the group profit on the current source figures?",
+    "command": "npm run group -- profit --period=2026-09",
+    "output": "  period   scenario  profit_amount\n  -------  --------  -------------\n  2026-09  actual    52000.00     \n  2026-09  budget    54600.00     "
+  }
+]

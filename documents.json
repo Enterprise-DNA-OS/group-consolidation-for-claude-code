@@ -1,11 +1,43 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
-    "file": "name",
+    "name": "management-pack",
+    "title": "Group management pack",
+    "for_each": "select id,code,name from periods order by code",
+    "file": "code",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Period decision",
+        "sql": "select code,name,status,reviewed_by,review_note from periods where id=$1",
+        "note": "Working management report. Not statutory consolidated financial statements. Debit-positive signed balances, group currency NZD."
+      },
+      {
+        "title": "Entity reconciliation",
+        "sql": "select entity,owner,actual_rows,incomplete_rows,reconciled_by,source_ref from entity_readiness where period_id=$1 order by entity"
+      },
+      {
+        "title": "Group results",
+        "sql": "select scenario,group_code,group_name,kind,base_amount,missing_values from group_results where period_id=$1 order by scenario,group_code"
+      },
+      {
+        "title": "Review actions",
+        "sql": "select code,name,owner,due_on,status,result from actions where period_id=$1 order by due_on"
+      }
+    ]
+  },
+  {
+    "name": "elimination-register",
+    "title": "Elimination working paper",
+    "for_each": "select id,code,name from journals order by code",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Approval record",
+        "sql": "select code,name,status,source_ref,prepared_by,reviewed_by from journals where id=$1"
+      },
+      {
+        "title": "Journal lines in group currency",
+        "sql": "select e.code entity,g.code account,g.name,l.amount as base_amount from journal_lines l join entities e on e.id=l.entity_id join group_accounts g on g.id=l.group_id where l.journal_id=$1 order by e.code,g.code"
+      }
     ]
   }
 ]

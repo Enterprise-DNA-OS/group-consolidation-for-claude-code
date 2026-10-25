@@ -1,115 +1,102 @@
-<h1 align="center">Group Consolidation for Claude Code</h1>
+# Group Consolidation for Claude Code
 
-<p align="center">
-  <strong>The open-source group consolidation desk that is just a database and Claude Code.</strong>
-</p>
+Your group accounts, translation rates and elimination working papers in a database you own.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+## Three ways to own it
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Calxa data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=calxa">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/calxa?utm_source=github&utm_medium=readme&utm_campaign=calxa">How it works</a></td>
-  </tr>
-</table>
+- **Do it yourself.** Free under the MIT licence. Install this repo, test the fictional group and bring a supported Calxa export across. Claude Code, Codex, OpenCode or Cursor can run the commands. Hosting and agent usage have their own costs.
+- **We customise it.** Enterprise DNA maps your group chart, source exports, review rules and reporting format. We build a web front end or use a different stack when your business needs one. One setup fee, then a retainer.
+- **We run it for you.** Omni by Enterprise DNA operates the agreed installation, integrations, backups and support. One setup fee, then a retainer. [Book 30 minutes with Sam](https://enterprisedna.co/omni/book/?offer=replace-software&utm_medium=readme).
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-calxa">Instead of Calxa</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+## What this replaces
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
+Calxa's Australian Enterprise plan lists A$1,980 per tenant per month including GST, or A$23,760 for twelve months. Implementation is a separate fee. This is a published plan comparison, not a customer invoice or a claim about every Calxa subscription. [Pricing, checked 25 October 2026](https://www.calxa.com/pricing/).
 
----
+This build covers a finance team's group management consolidation: importing entity balances, mapping accounts, applying approved currency rates, preparing balanced elimination journals, reconciling sources and reviewing a period pack. It is distinct from client advisory reporting and forward budget planning.
 
-## What is this
+It does not prepare statutory consolidated accounts. Ownership assessments, acquisitions, non-controlling interests, cashflow forecasting, tax, disclosures, permissions and live accounting connections require separately agreed work. The base uses full entity amounts, one group in NZD and explicitly supplied rates. Calxa already offers consolidation and elimination features; this project makes its own narrower working record inspectable and changeable.
 
-Group Consolidation for Claude Code does the job you pay Calxa for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Calxa dashboard cannot.
+## Start with fictional data
 
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Calxa per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=calxa).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
-
-## Quick start
-
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or later. No API key or paid service required.
 
 ```bash
-git clone https://github.com/Enterprise-DNA-OS/group-consolidation-for-claude-code.git
-cd group-consolidation-for-claude-code
 npm install
+npm test
 npm run demo
+npm run group -- weekly-review --period=2026-09
+npm run docs
+npm run view
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+With DATABASE_URL unset, PGlite stores data in .data/db. Set DATABASE_URL for a controlled PostgreSQL deployment and run npm run migrate. Demo and seed refuse a server URL. Seed skips any database that already contains entities. For real imports, use a separate empty DATA_DIR, run migrations and add your actual entities and periods. Never mix the demo with business records.
 
-### Use it with your own Postgres or Supabase
+## The weekly rituals
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+1. Read /attention for missing or overdue entity submissions.
+2. Use /mapping-gaps and /rate-gaps before reading the group results.
+3. Review /intercompany and prepare /add-journal with /add-line. A different reviewer uses /post-journal.
+4. Compare /budget-variance, finish /actions-due and record /reconcile against the source ledger.
+5. Run /compliance and /draft-pack. /lock-period finishes the management review only after the checks clear.
 
-## The commands
+36 CLI operations, each supporting --json, and 38 slash-command recipes including /customise and /new-view. References accept exact codes, case-insensitive names or partial UUIDs. Ambiguous references list candidates and exit 1. Mutation commands require --actor and run in a database transaction.
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+## Ten questions this build answers
 
-| Command | What it does |
-|---|---|
-| `/...` | ... |
+These questions have working queries today. They are not claims that Calxa cannot answer the same questions.
 
-## Instead of Calxa
+1. Which entity still owes its September source review? /attention.
+2. Which accounts have no group mapping? /mapping-gaps.
+3. Which entity needs an average or closing currency rate? /rate-gaps.
+4. What changed between each local balance and the translated amount? /balances.
+5. How much internal revenue remains before the elimination is posted? /intercompany.
+6. Which eliminations have no independent reviewer? /journals.
+7. What is group profit after the posted eliminations? /profit.
+8. Which group lines differ from their budget and have missing source evidence? /budget-variance and compliance.
+9. What was the old value before a source balance was corrected? /history.
+10. What is stopping the finance owner from locking this period? /compliance.
 
-<!-- TODO(author): how to bring data across from Calxa; link docs/replace-calxa.md -->
+## Bring your records
 
-## Architecture
-
+```bash
+npm run group -- import calxa --entity=NZ --file=imports/actuals.csv --scenario=actual --basis=closing-balances --sign=debit-positive --source="September ledger export" --actor="Finance owner" --dry-run
 ```
-group-consolidation-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
 
-## Built for coding agents
+Remove --dry-run after checking the preview. Organisation-level monthly CSVs are supported. Account Number, Account Path or a unique Account Name identifies each account. Eight documented month formats are recognised. Source CSVs remain stored with a fingerprint and receipt. Repeat identical imports change nothing; a changed file that overlaps existing balances stops for explicit reconciliation. /revise-balance records corrections with the previous value and reason.
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+Read [the exact mapping and exclusions](docs/replace-calxa.md). Debit-positive signed values are mandatory: credits negative, debits positive. Balance-sheet values must be closing balances for the period; monthly movements must be converted first. Confirm both against the ledger, never infer them from column names. Blank cells remain unknown. Business-unit exports, formulas and report layouts need separate mapping.
 
-## Contributing
+## Reading the numbers
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+Amounts are fixed-decimal database values. Each source account maps to a group line with an average, closing or historical translation rate. Rates multiply local amounts into NZD. Base-currency entities always use 1. Posted elimination journals are in NZD and apply to actuals only. The same entity-period rate policy is applied to budget values; forecast-specific rate sets require customisation.
 
-## Want it installed and run for you?
+Group account subtotals are provisional while any entity is missing. /profit withholds the total when the source set has gaps. Read /compliance with every pack. A trial balance must balance locally and after translation; differences are surfaced for review, never filled with a fabricated balancing amount. A single historical rate per entity-period is a management simplification, not a lot-by-lot equity translation engine. Income balances must have a consistent period basis and reconcile to the supplied trial balance.
 
-Enterprise DNA installs Group Consolidation for Claude Code for your business, migrates your Calxa data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+Locks and reviewer separation are CLI controls. The database owner can change records directly and --actor is not authenticated identity. Deploy team access controls before using it across staff. [Compliance scope](docs/compliance.md).
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=calxa)
-- Read more: [enterprisedna.co/omni/instead-of/calxa](https://enterprisedna.co/omni/instead-of/calxa?utm_source=github&utm_medium=readme&utm_campaign=calxa)
+## Paperwork and read-only views
 
-## License
+Edit brand.json once for your business name, colours and logo. npm run docs produces a management pack for each period and an elimination working paper for each journal. npm run view produces the week, group results and intercompany review. /draft-pack writes a private working pack under drafts/ and sends nothing. Reported amounts use debit-positive signs and group currency. [What a screen adds](docs/why-no-front-end.md).
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+## Your first hour: ten things to ask for
+
+1. Put our business name on the management pack.
+2. Add our group companies and their owners.
+3. Open the next reporting period with our deadline.
+4. Test one Calxa export without saving it.
+5. Map our chart to the group reporting lines.
+6. Show the accounts that need a currency rate.
+7. Prepare the internal-sales elimination working paper.
+8. Add our source-reconciliation checklist.
+9. Record a correction with its original value visible.
+10. Draft this month's management pack for review.
+
+/customise writes a migration and updates the affected commands and checks. /new-view adds a read-only report. No front end is needed for the supplied workflows.
+
+## Verification and operating scope
+
+npm test creates an isolated temporary database, applies migrations twice, seeds twice, exercises every operation and tests import rollback, corrections, review invalidation, locks, balanced journals, retained source files, unknown amounts, CSV edge cases and output escaping. The workflow runs Linux and Windows on Node 20 and 22, plus PostgreSQL 17 when GitHub runners are available. See [verification evidence](docs/verification.md) for what actually ran.
+
+Export all domain records with npm run group -- export --dir=exports/backup. Use database-native backups for disaster recovery and test restoration before use. Import is for Calxa source CSVs, not for restoring that JSON archive. Retain original ledger records and source exports under the applicable policy. Generated reports and exports are private working files, excluded from git.
+
+MIT. Not affiliated with Calxa or Anthropic. [Selection and sources](docs/research.md).

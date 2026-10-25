@@ -1,13 +1,46 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Group Consolidation for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Group close: the week",
+    "subtitle": "Read-only management review. Blank amounts are unknown.",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Entity submissions",
+        "sql": "select period,entity,owner,due_on,status,actual_rows,incomplete_rows,reconciled_by from entity_readiness order by due_on,entity"
+      },
+      {
+        "title": "Open follow-ups",
+        "sql": "select code,name,owner,due_on from actions where status='open' order by due_on"
+      }
+    ]
+  },
+  {
+    "name": "results",
+    "title": "Group results",
+    "subtitle": "Debit-positive signed balances in group currency. Provisional until period review.",
+    "sections": [
+      {
+        "title": "Actual and budget",
+        "sql": "select period,scenario,group_code,group_name,kind,base_amount,missing_values from group_results order by period,scenario,group_code"
+      },
+      {
+        "title": "Source readiness",
+        "sql": "select period,entity,actual_rows,incomplete_rows,reconciled_by from entity_readiness order by period,entity"
+      }
+    ]
+  },
+  {
+    "name": "intercompany",
+    "title": "Intercompany review",
+    "subtitle": "Source balances before elimination. Compare with posted journals.",
+    "sections": [
+      {
+        "title": "Balances to match",
+        "sql": "select period,entity,group_code,base_amount from intercompany_review order by period,entity,group_code"
+      },
+      {
+        "title": "Elimination journal register",
+        "sql": "select j.code,j.name,p.code period,j.status,j.prepared_by,j.reviewed_by,sum(l.amount) balance_amount from journals j join periods p on p.id=j.period_id left join journal_lines l on l.journal_id=j.id group by j.id,p.code order by p.code,j.code"
       }
     ]
   }
